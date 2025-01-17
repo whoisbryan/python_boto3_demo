@@ -1,0 +1,26 @@
+[project]
+name = "python-boto3-demo"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Bryan G. Mendoza",email = "bryangonzalezm@outlook.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "boto3[crt] (>=1.35.99,<2.0.0)",
+    "typer (>=0.15.1,<0.16.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+boto3-stubs = {version = "1.35.99", extras = ["s3"]}
+pytest = "^8.3.4"
+moto = "^5.0.26"
+
+
+
