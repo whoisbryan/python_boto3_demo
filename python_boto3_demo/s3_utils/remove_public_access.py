@@ -6,7 +6,9 @@ import os
 
 
 def remove():
-    """Verifica y elimina permisos públicos en buckets S3."""
+    """
+    Check and remove public permissions on S3 buckets.
+    """
     os.system('cls||clear')
 
     progress = Progress(
@@ -33,6 +35,7 @@ def remove():
 
     if not filtered_buckets:
         print("[bold green]No buckets with public access found![/bold green]")
+        input("Press ENTER to continue...")
         return
 
     print("The following S3 buckets have public access and will be updated:")
@@ -59,17 +62,23 @@ def remove():
 
 
 def get_aws_account_id():
-    """Obtiene el ID de la cuenta AWS actual."""
+    """
+    Gets the current AWS account ID.
+    """
     return boto3.client('sts').get_caller_identity().get('Account')
 
 
 def get_buckets(s3_client):
-    """Obtiene la lista de nombres de buckets."""
+    """
+    Gets the list of bucket names.
+    """
     return [bucket['Name'] for bucket in s3_client.list_buckets().get('Buckets')]
 
 
 def get_bucket_permissions(s3_client, bucket, account_id):
-    """Obtiene la configuración de acceso público de un bucket."""
+    """
+    Gets the public access settings of a bucket.
+    """
     return s3_client.get_public_access_block(
         Bucket=bucket,
         ExpectedBucketOwner=account_id
@@ -77,7 +86,9 @@ def get_bucket_permissions(s3_client, bucket, account_id):
 
 
 def filter_buckets_with_public_access(buckets_permissions):
-    """Filtra los buckets que tienen al menos un permiso público."""
+    """
+    Filter buckets that have at least one public permission.
+    """
     return {
         bucket: config
         for bucket, config in buckets_permissions.items()
@@ -86,7 +97,9 @@ def filter_buckets_with_public_access(buckets_permissions):
 
 
 def remove_public_access(s3_client, bucket, account_id):
-    """Configura el bucket para bloquear el acceso público."""
+    """
+    Configure the bucket to block public access.
+    """
     s3_client.put_public_access_block(
         Bucket=bucket,
         PublicAccessBlockConfiguration={

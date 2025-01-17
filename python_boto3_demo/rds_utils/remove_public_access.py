@@ -38,8 +38,9 @@ def remove():
             for instance_id in list_public_instances:
                 remove_public_access(instance_id)
                 delete_progress.advance(delete_task)
+        print("[bold green]Public access removed successfully![/bold green]")
+        input("Press ENTER to continue...")
          
-        
 
 def check_public_access():
     try:
@@ -53,12 +54,12 @@ def check_public_access():
         with progress:
             check_task = progress.add_task("Checking instances...", total=None)
             ids_public_access = []
-            # Obtener las instancias RDS
+
             response = rds_client.describe_db_instances()
             instances = response.get('DBInstances', [])
             
             if not instances:
-                print("No se encontraron instancias RDS.")
+                print("No RDS instances found.")
                 return []
 
             for instance in instances:
@@ -72,23 +73,21 @@ def check_public_access():
         return ids_public_access
     
     except Exception as e:
-        print(f"Error al verificar el acceso público: {str(e)}")
+        print(f"Error verifying public access: {str(e)}")
 
 
 def remove_public_access(instance_id):
     """
-    Cambia el acceso público de una instancia RDS.
-    
-    :param instance_id: El identificador de la instancia RDS.
+    Changes the public access of an RDS instance.
     """
     try:
         response = rds_client.modify_db_instance(
             DBInstanceIdentifier=instance_id,
             PubliclyAccessible=False,
-            ApplyImmediately=True  # Aplicar el cambio inmediatamente
+            ApplyImmediately=True
         )
     
     except Exception as e:
-        print(f"Error al cambiar el acceso público de la instancia '{instance_id}': {str(e)}")
+        print(f"Error changing public access of instance '{instance_id}': {str(e)}")
 
 
